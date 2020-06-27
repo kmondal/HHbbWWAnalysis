@@ -15,13 +15,13 @@ from selectionDefSL import *
 #===============================================================================================#
 #                                       PlotterHHtobbWW                                         #
 #===============================================================================================#
-class PlotterNanoHHtobbWW(BaseNanoHHtobbWW,HistogramsModule):
+class PlotterNanoHHtobbWWSL(BaseNanoHHtobbWW,HistogramsModule):
     """ Plotter module: HH->bbW(->e/µ nu)W(->e/µ nu) histograms from NanoAOD """
     def __init__(self, args):
-        super(PlotterNanoHHtobbWW, self).__init__(args)
+        super(PlotterNanoHHtobbWWSL, self).__init__(args)
 
     def definePlots(self, t, noSel, sample=None, sampleCfg=None): 
-        noSel = super(PlotterNanoHHtobbWW,self).prepareObjects(t, noSel, sample, sampleCfg)
+        noSel = super(PlotterNanoHHtobbWWSL,self).prepareObjects(t, noSel, sample, sampleCfg, 'SL')
         plots = []
         era = sampleCfg['era']
         self.yieldPlots = makeYieldPlots()
@@ -200,12 +200,12 @@ class PlotterNanoHHtobbWW(BaseNanoHHtobbWW,HistogramsModule):
                         plots.append(CutFlowReport(MuSelObjAk4JetsLooseExclusiveResolved0b3j.selName,MuSelObjAk4JetsLooseExclusiveResolved0b3j.sel))
                         if "LooseResolved0b3j" in jetplot_level:
                             ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsLooseExclusiveResolved0b3j.sel,'sinlepton':ElColl[0],
-                                                    'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[2],
+                                                    'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':None,
                                                     'has0b3j':True,
                                                     'suffix':ElSelObjAk4JetsLooseExclusiveResolved0b3j.selName,
                                                     'is_MC':self.is_MC})
                             ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsLooseExclusiveResolved0b3j.sel,'sinlepton':MuColl[0],
-                                                    'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[2],
+                                                    'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':None,
                                                     'has0b3j':True,
                                                     'suffix':MuSelObjAk4JetsLooseExclusiveResolved0b3j.selName,
                                                     'is_MC':self.is_MC})
@@ -288,12 +288,12 @@ class PlotterNanoHHtobbWW(BaseNanoHHtobbWW,HistogramsModule):
 
                     if not self.args.OnlyYield and "TightResolved0b4j" in jetplot_level:
                         ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsTightExclusiveResolved0b4j.sel,'sinlepton':ElColl[0],
-                                                'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[3],
+                                                'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':self.ak4LightJetsByPt[3],
                                                 'has0b4j':True,
                                                 'suffix':ElSelObjAk4JetsTightExclusiveResolved0b4j.selName,
                                                 'is_MC':self.is_MC})
                         ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsTightExclusiveResolved0b4j.sel,'sinlepton':MuColl[0],
-                                                'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[3],
+                                                'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':self.ak4LightJetsByPt[3],
                                                 'has0b4j':True,
                                                 'suffix':MuSelObjAk4JetsTightExclusiveResolved0b4j.selName,
                                                 'is_MC':self.is_MC})
@@ -351,7 +351,7 @@ class PlotterNanoHHtobbWW(BaseNanoHHtobbWW,HistogramsModule):
                     plots.append(objectsNumberPlot(**{k:channelDict[k] for k in commonItems},**ResolvedBTaggedJetsN))
                     plots.append(objectsNumberPlot(**{k:channelDict[k] for k in commonItems},**ResolvedLightJetsN))
                     # Ak4 Jets #
-#                    plots.extend(makeAk4JetsPlots(**{k:channelDict[k] for k in JetKeys}))
+                    plots.extend(makeAk4JetsPlots(**{k:channelDict[k] for k in JetKeys}))
                     # MET #
                     plots.extend(makeMETPlots(**{k:channelDict[k] for k in commonItems}, met=self.corrMET))
 
@@ -536,8 +536,8 @@ class PlotterNanoHHtobbWW(BaseNanoHHtobbWW,HistogramsModule):
                                                 'bothAreFat':True,'sel':MuSelObjAk8JetsInclusiveBoosted.sel,
                                                 'suffix':MuSelObjAk8JetsInclusiveBoosted.selName})                 
 
-               #     for channelDict in ChannelDictList:
-               #         plots.extend(makeHighLevelQuantitiesBoosted(**channelDict))    
+                    for channelDict in ChannelDictList:
+                        plots.extend(makeHighLevelQuantitiesBoosted(**channelDict))    
 
         #----- Add the Yield plots -----#
         plots.extend(self.yieldPlots.returnPlots())
