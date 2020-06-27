@@ -8,8 +8,8 @@ from bamboo.plots import Plot, EquidistantBinning, SummedPlot
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)))) # Add scripts in this directory
 from BaseHHtobbWW import BaseNanoHHtobbWW
-from plotDef import *
-from selectionDef import *
+from plotDefSL import *
+from selectionDefSL import *
 
 
 #===============================================================================================#

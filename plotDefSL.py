@@ -2,7 +2,7 @@ import math
 from bamboo.plots import Plot, EquidistantBinning, SummedPlot
 from bamboo import treefunctions as op
 
-from highlevelLambdas import *
+from highlevelLambdasSL import *
 
 # TODO : remove the self
 

@@ -53,6 +53,14 @@ Arguments for the HH->bbWW analysis on bamboo framework
         --Resolved0Btag
         --Resolved1Btag
         --Resolved2Btag
+        --ResolvedLoose0b3j
+        --ResolvedLoose1b2j
+        --ResolvedLoose2b1j
+        --ResolvedTight0b4j
+        --ResolvedTight1b3j
+        --ResolvedTight2b2j
+        --SemiBoostedHbb
+        --SemiBoostedWjj
         --Boosted
         --TTBarCR
         --BtagReweightingOn
@@ -147,12 +155,6 @@ One lepton and and one jet argument must be specified in addition to the require
                                 action      = "store_true",
                                 default     = False,
                                 help        = "Produce the plots/skim for the exclusive loose resolved category with 2 btagged jet")
-        '''
-        parser.add_argument("--LooseResolved2b2j", 
-                                action      = "store_true",
-                                default     = False,
-                                help        = "Produce the plots/skim for the exclusive resolved category with no btagged jet")
-        '''
         parser.add_argument("--TightResolved0b4j", 
                                 action      = "store_true",
                                 default     = False,
