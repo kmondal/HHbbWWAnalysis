@@ -169,6 +169,26 @@ def makeSingleLeptonSelection(self,baseSel,plot_yield=False):
                 ElFakeSelObject.makeYield(self.yieldPlots)
                 MuFakeSelObject.makeYield(self.yieldPlots)
 
+
+#            print("tauSel Size: %s   cleanedTauSel Size: %s"%(op.rng_len(self.tauSel),op.rng_len(self.tauCleanSel)))
+
+                
+            if not self.args.NoTauVeto: # nTau (isolated from fakeable leptons) = 0
+                # All the preselected leptons outside Z peak region within 10 GeV
+                ElFakeSelObject.selName += "noTau"
+                MuFakeSelObject.selName += "noTau"
+
+                ElFakeSelObject.yieldTitle += " + Tau Veto"
+                MuFakeSelObject.yieldTitle += " + Tau Veto"
+
+                ElFakeSelObject.refine(cut = [op.rng_len(self.tauCleanSel) == 0])
+                MuFakeSelObject.refine(cut = [op.rng_len(self.tauCleanSel) == 0])
+                
+                # Yield #
+                if plot_yield:
+                    ElFakeSelObject.makeYield(self.yieldPlots)
+                    MuFakeSelObject.makeYield(self.yieldPlots)
+            
             # Record if actual argument #
             if "Fakeable" in save_level:
                 selectionDict["Fakeable"] = [ElFakeSelObject,MuFakeSelObject]
@@ -240,7 +260,7 @@ def makeAk4JetSelection(self,selObject,nJet,copy_sel=False,plot_yield=False):
     elif nJet == 4:
         selObject.selName += "Ak4JetsTight"
         selObject.yieldTitle += " + Ak4 Jets Tight $\geq 2$"
-    selObject.sel = selObject.sel.refine(selObject.selName,cut=[op.rng_len(self.ak4Jets) >= nJet])
+    selObject.refine(cut=[op.rng_len(self.ak4Jets) >= nJet])
     if plot_yield:
         selObject.makeYield(self.yieldPlots)
     if copy_sel :
@@ -265,14 +285,13 @@ def makeAk8JetSelection(self,selObject,copy_sel=False,plot_yield=False):
         selObject.makeYield(self.yieldPlots)
     if copy_sel:
         return selObject
-    
 
 
-def makeExclusiveLooseResolvedJetComboSelection(self,selObject,has0b3j=False,has1b2j=False,has2b1j=False,copy_sel=False,plot_yield=False):
+def makeExclusiveLooseResolvedJetComboSelection(self,selObject,nbJet,copy_sel=False,plot_yield=False):
     if copy_sel:
         selObject = copy(selObject)
 
-    if has0b3j:
+    if nbJet == 0:
         AppliedSF = None
         '''
         #----- DY estimation from data -----#
@@ -295,24 +314,29 @@ def makeExclusiveLooseResolvedJetComboSelection(self,selObject,has0b3j=False,has
         '''
         selObject.selName += "ExclusiveResolved0b3j"
         selObject.yieldTitle += " + Exclusive Resolved (bjet = 0, ak4Jets >= 3)"
-        selObject.refine(cut=[op.rng_len(self.ak8Jets) == 0, op.rng_len(self.ak4BJets) == 0, op.rng_len(self.ak4LightJets) >= 3],
-                        weight=AppliedSF)
+        selObject.refine(cut    = [op.rng_len(self.ak8BJets) == 0, 
+                                   op.rng_len(self.ak4BJets) == 0,
+                                   op.rng_len(self.ak4LightJets) >= 3],
+                         weight = AppliedSF)
 
-    elif has1b2j:
-        AppliedSF = [self.DeepJetMediumSF(self.ak4BJets[0])] if self.is_MC else None
+    elif nbJet == 1:
+        AppliedSF = None
         selObject.selName += "ExclusiveResolved1b2j"
         selObject.yieldTitle += " + Exclusive Resolved (bjet = 1, ak4Jets >= 2)"
         #exclusive 1b-Jet Selection (nAk4bJets=1 & nAk8bJets=0)
         #Applied the SFs as weight
-        selObject.refine(cut    = [op.rng_len(self.ak8Jets) == 0, op.rng_len(self.ak4BJets) == 1, op.rng_len(self.ak4LightJets) >= 2],
+        selObject.refine(cut    = [op.rng_len(self.ak8BJets) == 0, 
+                                   op.rng_len(self.ak4BJets) == 1,
+                                   op.rng_len(self.ak4LightJets) >= 2],
                          weight = AppliedSF)
 
-    elif has2b1j:
-        AppliedSF = [self.DeepJetMediumSF(self.ak4BJets[0]),self.DeepJetMediumSF(self.ak4BJets[1])] if self.is_MC else None
+    elif nbJet == 2:
+        AppliedSF = None
         selObject.selName += "ExclusiveResolved2b1j"
         selObject.yieldTitle += " + Exclusive Resolved (bjet = 2, ak4Jets >= 1)"
-        '''
-        selObject.refine(cut    = [op.rng_len(self.ak4BJets)==2],
+        '''        
+        selObject.refine(cut    = [op.rng_len(self.ak4BJets) >= 2,
+                                   op.rng_len(self.ak8BJets) == 0],
                          weight = AppliedSF)
         
         if self.args.TTBarCR:
@@ -322,20 +346,22 @@ def makeExclusiveLooseResolvedJetComboSelection(self,selObject,has0b3j=False,has
             if plot_yield:
                 selObject.makeYield(self.yieldPlots)
         '''
-        selObject.refine(cut    = [op.rng_len(self.ak4BJets) == 2, op.rng_len(self.ak4LightJets) >= 2],
-                         weight = AppliedSF)
-               
+        selObject.refine(cut    = [op.rng_len(self.ak8BJets) == 0,
+                                   op.rng_len(self.ak4BJets) >= 2,
+                                   op.rng_len(self.ak4LightJets) >= 1],
+                         weight = None)
+    else: raise RuntimeError ("Error in Jet Selection!!!")
+    
     if plot_yield:
         selObject.makeYield(self.yieldPlots)
     if copy_sel:
         return selObject
 
-
-def makeExclusiveTightResolvedJetComboSelection(self,selObject,has0b4j=False,has1b3j=False,has2b2j=False,copy_sel=False,plot_yield=False):
+def makeExclusiveTightResolvedJetComboSelection(self,selObject,nbJet,copy_sel=False,plot_yield=False):
     if copy_sel:
         selObject = copy(selObject)
 
-    if has0b4j:
+    if nbJet == 0:
         AppliedSF = None
         '''
         #----- DY estimation from data -----#
@@ -358,26 +384,31 @@ def makeExclusiveTightResolvedJetComboSelection(self,selObject,has0b4j=False,has
         '''
         selObject.selName += "ExclusiveResolved0b4j"
         selObject.yieldTitle += " + Exclusive Resolved (0 bjet 4orMore ak4Jets)"
-        selObject.refine(cut=[op.rng_len(self.ak8Jets) == 0, op.rng_len(self.ak4BJets) == 0, op.rng_len(self.ak4LightJets)>=4],
-                        weight=AppliedSF)
+        selObject.refine(cut    = [op.rng_len(self.ak8BJets) == 0, 
+                                   op.rng_len(self.ak4BJets) == 0,
+                                   op.rng_len(self.ak4LightJets)>=4],
+                         weight = AppliedSF)
 
-
-    elif has1b3j:
-        AppliedSF = [self.DeepJetMediumSF(self.ak4BJets[0])] if self.is_MC else None
+    elif nbJet == 1:
+        AppliedSF = None
         selObject.selName += "ExclusiveResolved1b3j"
         selObject.yieldTitle += " + Exclusive Resolved (1 bjet 3orMore ak4Jets)"
         #exclusive 1b-Jet Selection (nAk4bJets=1 & nAk8bJets=0)
         #Applied the SFs as weight
-        selObject.refine(cut    = [op.rng_len(self.ak8Jets) == 0, op.rng_len(self.ak4BJets) == 1, op.rng_len(self.ak4LightJets) >= 3],
+        selObject.refine(cut    = [op.rng_len(self.ak8BJets) == 0,
+                                   op.rng_len(self.ak4BJets) == 1,
+                                   op.rng_len(self.ak4LightJets) >= 3],
                          weight = AppliedSF)
 
-    elif has2b2j:
-        AppliedSF = [self.DeepJetMediumSF(self.ak4BJets[0]),self.DeepJetMediumSF(self.ak4BJets[1])] if self.is_MC else None
+    elif nbJet == 2:
+        AppliedSF = None
         selObject.selName += "ExclusiveResolved2b2j"
         selObject.yieldTitle += " + Exclusive Resolved (2 bjets 2orMore ak4Jets)"
         '''
-        selObject.refine(cut    = [op.rng_len(self.ak4BJets)==2],
+        selObject.refine(cut    = [op.rng_len(self.ak4BJets) >= 2,
+                                   op.rng_len(self.ak8BJets) == 0],
                          weight = AppliedSF)
+        
         if self.args.TTBarCR:
             selObject.selName += "MbbCut150"
             selObject.yieldTitle += " + $M_{bb}>150$"
@@ -385,11 +416,16 @@ def makeExclusiveTightResolvedJetComboSelection(self,selObject,has0b4j=False,has
             if plot_yield:
                 selObject.makeYield(self.yieldPlots)
         '''
-        selObject.refine(cut = [op.rng_len(self.ak8Jets) == 0, op.rng_len(self.ak4BJets) == 2, op.rng_len(self.ak4LightJets) >= 2],
-                        weight=AppliedSF)
+        selObject.refine(cut   = [op.rng_len(self.ak4BJets) >= 2,
+                                  op.rng_len(self.ak8BJets) == 0,
+                                  op.rng_len(self.ak4LightJets) >= 2],
+                        weight = AppliedSF)
+
+    else: raise RuntimeError ("Error in Jet Selection!!!")
 
     if plot_yield:
         selObject.makeYield(self.yieldPlots)
+
     if copy_sel:
         return selObject
 
@@ -408,8 +444,10 @@ def makeSemiBoostedHbbSelection(self,selObject,copy_sel=False,plot_yield=False):
     AppliedSF = None # TODO: correct at v7
     selObject.selName += "HbbBoosted"
     selObject.yieldTitle += " + Hbb Boosted"
-    selObject.refine(cut    = [op.rng_len(self.ak8BJets) >=1, op.rng_len(self.ak4JetsCleanedFromAk8b) >=1],
+    selObject.refine(cut    = [op.rng_len(self.ak8BJets) >=1,
+                               op.rng_len(self.ak4JetsCleanedFromAk8b) >=1],
                      weight = AppliedSF)
+
     if plot_yield:
         selObject.makeYield(self.yieldPlots)
     if copy_sel:
@@ -430,8 +468,10 @@ def makeInclusiveBoostedSelection(self,selObject,copy_sel=False,plot_yield=False
     AppliedSF = None # TODO: correct at v7
     selObject.selName += "InclusiveBoosted"
     selObject.yieldTitle += " + Inclusive Boosted"
-    selObject.refine(cut    = [op.rng_len(self.ak8nonBJets) >= 1, op.rng_len(self.ak8BJets) >= 1],
+    selObject.refine(cut    = [op.rng_len(self.ak8nonBJets) >= 1, 
+                               op.rng_len(self.ak8BJets) >= 1],
                      weight = AppliedSF)
+
     if plot_yield:
         selObject.makeYield(self.yieldPlots)
     if copy_sel:

@@ -46,6 +46,7 @@ Arguments for the HH->bbWW analysis on bamboo framework
         --FakeExtrapolation
         --NoZVeto
         --ZPeak
+        --NoTauVeto
 
     * Jet arguments *
         --Ak4
@@ -121,7 +122,10 @@ One lepton and and one jet argument must be specified in addition to the require
                             action      = "store_true",
                             default     = False,
                             help        = "Select the Z peak at tight level |M_ll-M_Z|<10 GeV (must be used with --NoZVeto, only effective with --Tight)")
-
+        parser.add_argument("--NoTauVeto", 
+                            action      = "store_true",
+                            default     = False,
+                            help        = "Select the events do not have any tau overlapped with fakeable leptons")
         #----- Jet selection arguments -----#
         parser.add_argument("--Ak4", 
                                 action      = "store_true",
@@ -904,7 +908,7 @@ One lepton and and one jet argument must be specified in addition to the require
                 #           (can be 0 for MC where the lepton is not genMatched)
                 # SR : len(self.lead*TightSel) == 1
                 # Fake CR : len(self.lead*FakeExtrapolationSel) == 1 
-        '''  
+        
         ##############################################################################
         #                                  Tau                                       #
         ##############################################################################
@@ -918,15 +922,15 @@ One lepton and and one jet argument must be specified in addition to the require
                                                     ta.decayMode  == 1, 
                                                     ta.decayMode  == 2, 
                                                     ta.decayMode  == 10, 
-                                                    ta.decayMode  == 11), 
-                                               ta.idDeepTau2017v2p1VSjet == 16
+                                                    ta.decayMode  == 11) 
+                                               #ta.idDeepTau2017v2p1VSjet == 16
                                                )
-
         self.tauSel = op.select (t.Tau, self.lambda_tauSel)
+        # Cleaning #
         self.lambda_tauClean = lambda ta : op.AND(op.NOT(op.rng_any(self.electronsFakeSel, lambda el : op.deltaR(ta.p4, el.p4) <= 0.3)), 
-                                                         op.NOT(op.rng_any(self.muonsFakeSel, lambda mu : op.deltaR(ta.p4, mu.p4) <= 0.3)))
+                                                  op.NOT(op.rng_any(self.muonsFakeSel, lambda mu : op.deltaR(ta.p4, mu.p4) <= 0.3)))
         self.tauCleanSel = op.select(self.tauSel, self.lambda_tauClean)
-        '''
+
         #############################################################################
         #                                AK4 Jets                                   #
         #############################################################################

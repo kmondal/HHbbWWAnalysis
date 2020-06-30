@@ -29,4 +29,4 @@ MinDR_lep4j = lambda lep,j1,j2,j3,j4 : op.min(op.deltaR(lep.p4,j1.p4),op.deltaR(
 HT2_l3jmet  = lambda l,j1,j2,j3,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+l.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+l.p4.Py(),2)) + op.abs((j1.p4+j2.p4+j3.p4).Pt())
 HT2R_l3jmet = lambda l,j1,j2,j3,met : HT2_l3jmet(met,l,j1,j2,j3)/(met.pt+l.p4.Pt()+j1.p4.Pt()+j2.p4.Pt()+j3.p4.Pt())
 HT2_l4jmet  = lambda l,j1,j2,j3,j4,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+l.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+l.p4.Py(),2)) + op.abs((j1.p4+j2.p4+j3.p4+j4.p4).Pt())
-HT2R_l4jmet = lambda l,j1,j2,j3,j4,met : HT2(met,l,j1,j2,j3,j4)/(met.pt+l.p4.Pt()+j1.p4.Pt()+j2.p4.Pt()+j3.p4.Pt()+j4.p4.Pt())
+HT2R_l4jmet = lambda l,j1,j2,j3,j4,met : HT2_l4jmet(met,l,j1,j2,j3,j4)/(met.pt+l.p4.Pt()+j1.p4.Pt()+j2.p4.Pt()+j3.p4.Pt()+j4.p4.Pt())
