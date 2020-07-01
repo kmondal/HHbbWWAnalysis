@@ -81,10 +81,10 @@ def makeSingleLeptonSelection(self,baseSel,plot_yield=False):
 
 
     # Loose SF #
-#    ElLooseSF = lambda lepColl : [self.ttH_singleElectron_trigSF(lepColl)] + self.lambda_ElectronLooseSF(lepColl[0]) if self.is_MC else None
-#    MuLooseSF = lambda lepColl : [self.ttH_singleMuon_trigSF(lepColl)] + self.lambda_MuonLooseSF(lepColl[0]) if self.is_MC else None
-    ElLooseSF = lambda lepColl : self.lambda_ElectronLooseSF(lepColl[0]) if self.is_MC else None
-    MuLooseSF = lambda lepColl : self.lambda_MuonLooseSF(lepColl[0]) if self.is_MC else None    
+    ElLooseSF = lambda lepColl : [self.ttH_singleElectron_trigSF(lepColl[0])] + self.lambda_ElectronLooseSF(lepColl[0]) if self.is_MC else None
+    MuLooseSF = lambda lepColl : [self.ttH_singleMuon_trigSF(lepColl[0])] + self.lambda_MuonLooseSF(lepColl[0]) if self.is_MC else None
+#    ElLooseSF = lambda lepColl : self.lambda_ElectronLooseSF(lepColl[0]) if self.is_MC else None
+#    MuLooseSF = lambda lepColl : self.lambda_MuonLooseSF(lepColl[0]) if self.is_MC else None    
     # Tight SF #
     ElTightSF = lambda lepColl : self.lambda_ElectronTightSF(lepColl[0]) if self.is_MC else None
     MuTightSF = lambda lepColl : self.lambda_MuonTightSF(lepColl[0]) if self.is_MC else None

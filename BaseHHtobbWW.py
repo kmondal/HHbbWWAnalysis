@@ -912,17 +912,12 @@ One lepton and and one jet argument must be specified in addition to the require
         ##############################################################################
         #                                  Tau                                       #
         ##############################################################################
-        self.lambda_tauSel = lambda ta : op.AND(
-                                               ta.p4.Pt() >= 20.,
-                                               op.abs(ta.p4.Eta()) <= 2.3,
-                                               op.abs(ta.dxy) <= 1000.0,
-                                               op.abs(ta.dz) <= 0.2,
-                                               ta.idDecayModeNewDMs,
-                                               op.OR(ta.decayMode == 0, 
-                                                    ta.decayMode  == 1, 
-                                                    ta.decayMode  == 2, 
-                                                    ta.decayMode  == 10, 
-                                                    ta.decayMode  == 11) 
+        self.lambda_tauSel = lambda ta : op.AND(ta.p4.Pt() >= 20.,
+                                                op.abs(ta.p4.Eta()) <= 2.3,
+                                                op.abs(ta.dxy) <= 1000.0,
+                                                op.abs(ta.dz) <= 0.2,
+                                                ta.idDecayModeNewDMs,
+                                                ta.decayMode == op.OR(0,1,2,10,11)
                                                #ta.idDeepTau2017v2p1VSjet == 16
                                                )
         self.tauSel = op.select (t.Tau, self.lambda_tauSel)
@@ -1135,6 +1130,8 @@ One lepton and and one jet argument must be specified in addition to the require
             #### Single lepton triggers ####
             self.ttH_singleElectron_trigSF = SF.get_scalefactor("lepton", 'singleTrigger_electron_{}'.format(era) , combine="weight", systName="ttH_singleElectron_trigSF")
             self.ttH_singleMuon_trigSF = SF.get_scalefactor("lepton", 'singleTrigger_muon_{}'.format(era) , combine="weight", systName="ttH_singleMuon_trigSF")
+#            self.lambda_ttH_singleElectron_trigSF = lambda el : [self.ttH_singleElectron_trigSF(el)]
+#            self.lambda_ttH_singleMuon_trigSF = lambda mu : [self.ttH_singleMuon_trigSF(mu)]
             
             #### Double lepton triggers #### (Need to split according to era) 
                 # https://gitlab.cern.ch/ttH_leptons/doc/-/blob/master/Legacy/data_to_mc_corrections.md#trigger-efficiency-scale-factors -> deprecated
