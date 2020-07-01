@@ -80,6 +80,7 @@ Arguments for the HH->bbWW analysis on bamboo framework
 
     * Technical *
         --backend
+        --NoSystematics
 
 ----- Plotter mode -----
 Every combination of lepton and jet arguments can be used, if none specified they will all be plotted
@@ -96,7 +97,10 @@ One lepton and and one jet argument must be specified in addition to the require
                             type=str, 
                             default="dataframe", 
                             help="Backend to use, 'dataframe' (default) or 'lazy'")
-
+        parser.add_argument("--NoSystematics", 
+                            action      = "store_true",
+                            default     = False,
+                            help="Disable all systematic variations (default=False)")
         #----- Lepton selection arguments -----#
         parser.add_argument("--Preselected", 
                             action      = "store_true",
@@ -248,6 +252,10 @@ One lepton and and one jet argument must be specified in addition to the require
 
         ## Check distributed option #
         isNotWorker = (self.args.distributed != "worker") 
+
+        # Turn off systs #
+        if self.args.NoSystematics:
+            noSel = noSel.refine('SystOff',autoSyst=False)
 
         # Check era #
         if era != "2016" and era != "2017" and era != "2018":
@@ -917,7 +925,11 @@ One lepton and and one jet argument must be specified in addition to the require
                                                 op.abs(ta.dxy) <= 1000.0,
                                                 op.abs(ta.dz) <= 0.2,
                                                 ta.idDecayModeNewDMs,
-                                                ta.decayMode == op.OR(0,1,2,10,11)
+                                                op.OR(ta.decayMode == 0,
+                                                      ta.decayMode == 1,
+                                                      ta.decayMode == 2,
+                                                      ta.decayMode == 10,
+                                                      ta.decayMode == 11)
                                                #ta.idDeepTau2017v2p1VSjet == 16
                                                )
         self.tauSel = op.select (t.Tau, self.lambda_tauSel)

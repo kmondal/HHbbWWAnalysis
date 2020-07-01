@@ -2,7 +2,7 @@ import math
 from bamboo.plots import Plot, EquidistantBinning, SummedPlot
 from bamboo import treefunctions as op
 
-from highlevelLambdasSL import *
+from highlevelLambdas import *
 from bamboo.plots import CutFlowReport
 
 # TODO : remove the self
