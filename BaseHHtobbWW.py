@@ -46,6 +46,7 @@ Arguments for the HH->bbWW analysis on bamboo framework
         --FakeExtrapolation
         --NoZVeto
         --ZPeak
+        --NoTauVeto
 
     * Jet arguments *
         --Ak4
@@ -53,6 +54,14 @@ Arguments for the HH->bbWW analysis on bamboo framework
         --Resolved0Btag
         --Resolved1Btag
         --Resolved2Btag
+        --ResolvedLoose0b3j
+        --ResolvedLoose1b2j
+        --ResolvedLoose2b1j
+        --ResolvedTight0b4j
+        --ResolvedTight1b3j
+        --ResolvedTight2b2j
+        --SemiBoostedHbb
+        --SemiBoostedWjj
         --Boosted
         --TTBarCR
         --BtagReweightingOn
@@ -92,8 +101,6 @@ One lepton and and one jet argument must be specified in addition to the require
                             action      = "store_true",
                             default     = False,
                             help="Disable all systematic variations (default=False)")
-
-
         #----- Lepton selection arguments -----#
         parser.add_argument("--Preselected", 
                             action      = "store_true",
@@ -119,7 +126,10 @@ One lepton and and one jet argument must be specified in addition to the require
                             action      = "store_true",
                             default     = False,
                             help        = "Select the Z peak at tight level |M_ll-M_Z|<10 GeV (must be used with --NoZVeto, only effective with --Tight)")
-
+        parser.add_argument("--NoTauVeto", 
+                            action      = "store_true",
+                            default     = False,
+                            help        = "Select the events do not have any tau overlapped with fakeable leptons")
         #----- Jet selection arguments -----#
         parser.add_argument("--Ak4", 
                                 action      = "store_true",
@@ -141,6 +151,38 @@ One lepton and and one jet argument must be specified in addition to the require
                                 action      = "store_true",
                                 default     = False,
                                 help        = "Produce the plots/skim for the exclusive resolved category with two btagged jets")
+        parser.add_argument("--LooseResolved0b3j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive loose resolved category with no btagged jet")
+        parser.add_argument("--LooseResolved1b2j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive loose resolved category with 1 btagged jet")
+        parser.add_argument("--LooseResolved2b1j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive loose resolved category with 2 btagged jet")
+        parser.add_argument("--TightResolved0b4j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive tight resolved category with no btagged jet")
+        parser.add_argument("--TightResolved1b3j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive tight resolved category with 1 btagged jet")
+        parser.add_argument("--TightResolved2b2j", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the exclusive tight resolved category with 2 btagged jet")
+        parser.add_argument("--SemiBoostedHbb", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the semi boosted category (Hbb boosted, Wjj resolved)")
+        parser.add_argument("--SemiBoostedWjj", 
+                                action      = "store_true",
+                                default     = False,
+                                help        = "Produce the plots/skim for the semi boosted category (Hbb resolved, Wjj boosted)")
         parser.add_argument("--Boosted", 
                                 action      = "store_true",
                                 default     = False,
@@ -690,7 +732,7 @@ One lepton and and one jet argument must be specified in addition to the require
                                                         )
         self.electronsPreSelInclu = op.select(electronsByPt, self.lambda_electronPreSel) # can include a muon in cone
         self.lambda_cleanElectron = lambda ele : op.NOT(op.rng_any(self.muonsPreSel, lambda mu : op.deltaR(mu.p4, ele.p4) <= 0.3 ))
-            # No overlap between electron and muon in cone of DR<=0.3
+        # No overlap between electron and muon in cone of DR<=0.3
         self.electronsPreSel = op.select(self.electronsPreSelInclu, self.lambda_cleanElectron)
         # Fakeable selection #
         self.lambda_electronFakeSel = lambda ele : op.AND(
@@ -720,8 +762,8 @@ One lepton and and one jet argument must be specified in addition to the require
         self.ElElDileptonPreSel = op.combine(self.electronsPreSelInclu, N=2)
         self.MuMuDileptonPreSel = op.combine(self.muonsPreSel, N=2)
         self.ElMuDileptonPreSel = op.combine((self.electronsPreSelInclu, self.muonsPreSel))
-            # Need pairs without sign for one of the selection
-            # We use electrons before muon cleaning : electron-muon pair that has low mass are typically close to each other
+        # Need pairs without sign for one of the selection
+        # We use electrons before muon cleaning : electron-muon pair that has low mass are typically close to each other
         # OS Preselected dilepton -> Z Veto #
         self.OSElElDileptonPreSel = op.combine(self.electronsPreSel, N=2, pred=self.lambda_leptonOS)
         self.OSMuMuDileptonPreSel = op.combine(self.muonsPreSel, N=2, pred=self.lambda_leptonOS)
@@ -877,7 +919,28 @@ One lepton and and one jet argument must be specified in addition to the require
                 #           (can be 0 for MC where the lepton is not genMatched)
                 # SR : len(self.lead*TightSel) == 1
                 # Fake CR : len(self.lead*FakeExtrapolationSel) == 1 
-          
+        
+        ##############################################################################
+        #                                  Tau                                       #
+        ##############################################################################
+        self.lambda_tauSel = lambda ta : op.AND(ta.p4.Pt() >= 20.,
+                                                op.abs(ta.p4.Eta()) <= 2.3,
+                                                op.abs(ta.dxy) <= 1000.0,
+                                                op.abs(ta.dz) <= 0.2,
+                                                ta.idDecayModeNewDMs,
+                                                op.OR(ta.decayMode == 0,
+                                                      ta.decayMode == 1,
+                                                      ta.decayMode == 2,
+                                                      ta.decayMode == 10,
+                                                      ta.decayMode == 11)
+                                               #ta.idDeepTau2017v2p1VSjet == 16
+                                               )
+        self.tauSel = op.select (t.Tau, self.lambda_tauSel)
+        # Cleaning #
+        self.lambda_tauClean = lambda ta : op.AND(op.NOT(op.rng_any(self.electronsFakeSel, lambda el : op.deltaR(ta.p4, el.p4) <= 0.3)), 
+                                                  op.NOT(op.rng_any(self.muonsFakeSel, lambda mu : op.deltaR(ta.p4, mu.p4) <= 0.3)))
+        self.tauCleanSel = op.select(self.tauSel, self.lambda_tauClean)
+
         #############################################################################
         #                                AK4 Jets                                   #
         #############################################################################
@@ -919,7 +982,7 @@ One lepton and and one jet argument must be specified in addition to the require
         self.ak4BJets     = op.select(self.ak4Jets, self.lambda_ak4Btag)
         self.ak4LightJetsByPt = op.select(self.ak4Jets, self.lambda_ak4NoBtag)
         self.ak4LightJets = op.sort(self.ak4LightJetsByPt, lambda jet : -jet.btagDeepFlavB)
-            # Sorted by btag score because for 0 and 1 btag categories, 
+        # Sorted by btag score because for 0 and 1 btag categories, 
 
 
         #############################################################################
@@ -956,7 +1019,7 @@ One lepton and and one jet argument must be specified in addition to the require
                                                 op.NOT(op.rng_any(self.electronsFakeSel, lambda ele : op.deltaR(j.p4, ele.p4) <= 0.8 )), 
                                                 op.NOT(op.rng_any(self.muonsFakeSel, lambda mu : op.deltaR(j.p4, mu.p4) <= 0.8 ))
                                             )
-            # remove jets within cone of DR<0.8 of preselected electrons and muons
+        # remove jets within cone of DR<0.8 of preselected electrons and muons
         self.ak8Jets = op.select(self.ak8JetsPreSel,self.lambda_cleanAk8Jets)
 
         ############     Btagging     #############
@@ -964,14 +1027,25 @@ One lepton and and one jet argument must be specified in addition to the require
         if era == "2016": 
             self.lambda_ak8Btag = lambda fatjet : op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.6321),
                                                         op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.6321))
+            self.lambda_ak8noBtag = lambda fatjet : op.NOT(op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.6321),
+                                                        op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.6321)))
         elif era =="2017":
             self.lambda_ak8Btag = lambda fatjet : op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.4941),
                                                         op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.4941))
+            self.lambda_ak8noBtag = lambda fatjet : op.NOT(op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.4941),
+                                                        op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.4941)))
         elif era == "2018":
             self.lambda_ak8Btag = lambda fatjet : op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.4184),
                                                         op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.4184))
+            self.lambda_ak8noBtag = lambda fatjet : op.NOT(op.OR(op.AND(fatjet.subJet1.pt >= 30, fatjet.subJet1.btagDeepB > 0.4184),
+                                                        op.AND(fatjet.subJet2.pt >= 30, fatjet.subJet2.btagDeepB > 0.4184)))
 
         self.ak8BJets = op.select(self.ak8Jets, self.lambda_ak8Btag)
+        self.ak8nonBJets = op.select(self.ak8Jets, self.lambda_ak8noBtag)
+
+        # Ak4 Jet Collection cleaned from Ak8b #                                                                                                                                                            
+        self.lambda_cleanAk4FromAk8b = lambda ak4j : op.NOT(op.rng_any(self.ak8BJets, lambda ak8bj : op.deltaR(ak4j.p4, ak8bj.p4) <= 1.2))
+        self.ak4JetsCleanedFromAk8b  = op.select(self.ak4LightJets, self.lambda_cleanAk4FromAk8b)
 
         #############################################################################
         #                               Triggers                                    #
@@ -1079,6 +1153,8 @@ One lepton and and one jet argument must be specified in addition to the require
             #### Single lepton triggers ####
             self.ttH_singleElectron_trigSF = SF.get_scalefactor("lepton", 'singleTrigger_electron_{}'.format(era) , combine="weight", systName="ttH_singleElectron_trigSF")
             self.ttH_singleMuon_trigSF = SF.get_scalefactor("lepton", 'singleTrigger_muon_{}'.format(era) , combine="weight", systName="ttH_singleMuon_trigSF")
+#            self.lambda_ttH_singleElectron_trigSF = lambda el : [self.ttH_singleElectron_trigSF(el)]
+#            self.lambda_ttH_singleMuon_trigSF = lambda mu : [self.ttH_singleMuon_trigSF(mu)]
             
             #### Double lepton triggers #### (Need to split according to era) 
                 # https://gitlab.cern.ch/ttH_leptons/doc/-/blob/master/Legacy/data_to_mc_corrections.md#trigger-efficiency-scale-factors -> deprecated

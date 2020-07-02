@@ -1,23 +1,32 @@
 from bamboo import treefunctions as op
 
 # 4-Momentum association #
-ll_p4 = lambda l1,l2 : l1.p4+l2.p4
-lljj_p4 = lambda l1,l2,j1,j2 : l1.p4+l2.p4+j1.p4+j2.p4
+lep1j_p4 = lambda lep,j1 : lep.p4+j1.p4
+lep2j_p4 = lambda lep,j1,j2 : lep.p4+j1.p4+j2.p4
+lep3j_p4 = lambda lep,j1,j2,j3 : lep.p4+j1.p4+j2.p4+j3.p4
+lep4j_p4 = lambda lep,j1,j2,j3,j4 : lep.p4+j1.p4+j2.p4+j3.p4+j4.p4
+
+# SingleLep-Met variables
+SinglepMet_dPhi = lambda lep, met : lep.p4.Phi()-met.phi
+
+# Jet-Met DeltaPhi
+
 
 # Dilep-Met variables #
-DilepMET_deltaPhi = lambda l1,l2,met : ll_p4(l1,l2).Phi()-met.phi
-DilepMET_Pt = lambda l1,l2,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+ll_p4(l1,l2).Px(),2)+op.pow(met.pt*op.sin(met.phi)+ll_p4(l1,l2).Py(),2))
+SinglepMet_Pt = lambda lep,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+lep.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+lep.p4.Py(),2))
 
 # Transverse mass #
-MT_ll = lambda l1,l2,met : op.sqrt(2*ll_p4(l1,l2).Pt()*met.pt*(1-op.cos(ll_p4(l1,l2).Phi()-met.phi)))
-MT_lljj = lambda l1,l2,j1,j2,met : op.sqrt(2*lljj_p4(l1,l2,j1,j2).Pt()*met.pt*(1-op.cos(lljj_p4(l1,l2,j1,j2).Phi()-met.phi)))
+MT = lambda lep,met : op.sqrt(2*lep.p4.Pt()*met.pt*(1-op.cos(lep.p4.Phi()-met.phi)))
+MT_W1W2_ljj = lambda lep,j1,j2,met : op.sqrt(2*lep2j_p4(lep,j1,j2).Pt()*met.pt*(1-op.cos(lep2j_p4(lep,j1,j2).Phi()-met.phi)))
+MT_W1W2_lj  = lambda lep,j1,met : op.sqrt(2*lep1j_p4(lep,j1).Pt()*met.pt*(1-op.cos(lep1j_p4(lep,j1).Phi()-met.phi)))
 
 # dilep + dijet #
 #M_lljj = lambda l1,l2,j1,j2 : op.invariant_mass(ll_p4(l1,l2),jj_p4(j1,j2))
-M_lljj = lambda l1,l2,j1,j2 : op.invariant_mass(lljj_p4(l1,l2,j1,j2))
-MinDR_lj = lambda l1,l2,j1,j2 : op.min(op.min(op.deltaR(l1.p4,j1.p4),op.deltaR(l1.p4,j2.p4)),
-                                       op.min(op.deltaR(l2.p4,j1.p4),op.deltaR(l2.p4,j2.p4)))
+MinDR_lep3j = lambda lep,j1,j2,j3 : op.min(op.deltaR(lep.p4,j1.p4),op.deltaR(lep.p4,j2.p4),op.deltaR(lep.p4,j3.p4))
+MinDR_lep4j = lambda lep,j1,j2,j3,j4 : op.min(op.deltaR(lep.p4,j1.p4),op.deltaR(lep.p4,j2.p4),op.deltaR(lep.p4,j3.p4),op.deltaR(lep.p4,j4.p4))
 
 # Higgs related variables #
-HT2 = lambda l1,l2,j1,j2,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+l1.p4.Px()+l2.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+l1.p4.Py()+l2.p4.Py(),2)) + op.abs((j1.p4+j2.p4).Pt())
-HT2R = lambda l1,l2,j1,j2,met : HT2(met,l1,l2,j1,j2)/(met.pt+l1.p4.Pt()+l2.p4.Pt()+j1.p4.Pt()+j2.p4.Pt())
+HT2_l3jmet  = lambda l,j1,j2,j3,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+l.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+l.p4.Py(),2)) + op.abs((j1.p4+j2.p4+j3.p4).Pt())
+HT2R_l3jmet = lambda l,j1,j2,j3,met : HT2_l3jmet(met,l,j1,j2,j3)/(met.pt+l.p4.Pt()+j1.p4.Pt()+j2.p4.Pt()+j3.p4.Pt())
+HT2_l4jmet  = lambda l,j1,j2,j3,j4,met : op.sqrt(op.pow(met.pt*op.cos(met.phi)+l.p4.Px(),2)+op.pow(met.pt*op.sin(met.phi)+l.p4.Py(),2)) + op.abs((j1.p4+j2.p4+j3.p4+j4.p4).Pt())
+HT2R_l4jmet = lambda l,j1,j2,j3,j4,met : HT2_l4jmet(met,l,j1,j2,j3,j4)/(met.pt+l.p4.Pt()+j1.p4.Pt()+j2.p4.Pt()+j3.p4.Pt()+j4.p4.Pt())
