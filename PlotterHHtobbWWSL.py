@@ -200,12 +200,12 @@ class PlotterNanoHHtobbWWSL(BaseNanoHHtobbWW,HistogramsModule):
                         plots.append(CutFlowReport(MuSelObjAk4JetsLooseExclusiveResolved0b3j.selName,MuSelObjAk4JetsLooseExclusiveResolved0b3j.sel))
                         if "LooseResolved0b3j" in jetplot_level:
                             ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsLooseExclusiveResolved0b3j.sel,'sinlepton':ElColl[0],
-                                                    'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':None,
+                                                    'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':None,
                                                     'nJet':3,'nbJet':0,
                                                     'suffix':ElSelObjAk4JetsLooseExclusiveResolved0b3j.selName,
                                                     'is_MC':self.is_MC})
                             ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsLooseExclusiveResolved0b3j.sel,'sinlepton':MuColl[0],
-                                                    'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':None,
+                                                    'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':None,
                                                     'nJet':3,'nbJet':0,
                                                     'suffix':MuSelObjAk4JetsLooseExclusiveResolved0b3j.selName,
                                                     'is_MC':self.is_MC})
@@ -246,12 +246,12 @@ class PlotterNanoHHtobbWWSL(BaseNanoHHtobbWW,HistogramsModule):
                         plots.append(CutFlowReport(MuSelObjAk4JetsLooseExclusiveResolved2b1j.selName,MuSelObjAk4JetsLooseExclusiveResolved2b1j.sel))
                         if "LooseResolved2b1j" in jetplot_level:
                             ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsLooseExclusiveResolved2b1j.sel,'sinlepton':ElColl[0],
-                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJets[0],'j4':None,
+                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJetsByPt[0],'j4':None,
                                                     'nJet':3,'nbJet':2,
                                                     'suffix':ElSelObjAk4JetsLooseExclusiveResolved2b1j.selName,
                                                     'is_MC':self.is_MC})
                             ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsLooseExclusiveResolved2b1j.sel,'sinlepton':MuColl[0],
-                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJets[0],'j4':None,
+                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJetsByPt[0],'j4':None,
                                                     'nJet':3,'nbJet':2,
                                                     'suffix':MuSelObjAk4JetsLooseExclusiveResolved2b1j.selName,
                                                     'is_MC':self.is_MC})
@@ -267,12 +267,12 @@ class PlotterNanoHHtobbWWSL(BaseNanoHHtobbWW,HistogramsModule):
 
                     if not self.args.OnlyYield and "TightResolved0b4j" in jetplot_level:
                         ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsTightExclusiveResolved0b4j.sel,'sinlepton':ElColl[0],
-                                                'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':self.ak4LightJetsByPt[3],
+                                                'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[3],
                                                 'nJet':4,'nbJet':0,
                                                 'suffix':ElSelObjAk4JetsTightExclusiveResolved0b4j.selName,
                                                 'is_MC':self.is_MC})
                         ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsTightExclusiveResolved0b4j.sel,'sinlepton':MuColl[0],
-                                                'j1':self.ak4LightJetsByPt[0],'j2':self.ak4LightJetsByPt[1],'j3':self.ak4LightJetsByPt[2],'j4':self.ak4LightJetsByPt[3],
+                                                'j1':self.ak4LightJets[0],'j2':self.ak4LightJets[1],'j3':self.ak4LightJets[2],'j4':self.ak4LightJets[3],
                                                 'nJet':4,'nbJet':0,
                                                 'suffix':MuSelObjAk4JetsTightExclusiveResolved0b4j.selName,
                                                 'is_MC':self.is_MC})
@@ -309,12 +309,12 @@ class PlotterNanoHHtobbWWSL(BaseNanoHHtobbWW,HistogramsModule):
                         plots.append(CutFlowReport(MuSelObjAk4JetsTightExclusiveResolved2b2j.selName,MuSelObjAk4JetsTightExclusiveResolved2b2j.sel))
                         if "TightResolved2b2j" in jetplot_level:
                             ChannelDictList.append({'channel':'El','sel':ElSelObjAk4JetsTightExclusiveResolved2b2j.sel,'sinlepton':ElColl[0],
-                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJets[0],'j4':self.ak4LightJets[1],
+                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJetsByPt[0],'j4':self.ak4LightJetsByPt[1],
                                                     'nJet':4,'nbJet':2,
                                                     'suffix':ElSelObjAk4JetsTightExclusiveResolved2b2j.selName,
                                                     'is_MC':self.is_MC})
                             ChannelDictList.append({'channel':'Mu','sel':MuSelObjAk4JetsTightExclusiveResolved2b2j.sel,'sinlepton':MuColl[0],
-                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJets[0],'j4':self.ak4LightJets[1],
+                                                    'j1':self.ak4BJets[0],'j2':self.ak4BJets[1],'j3':self.ak4LightJetsByPt[0],'j4':self.ak4LightJetsByPt[1],
                                                     'nJet':4,'nbJet':2,
                                                     'suffix':MuSelObjAk4JetsTightExclusiveResolved2b2j.selName,
                                                     'is_MC':self.is_MC})
