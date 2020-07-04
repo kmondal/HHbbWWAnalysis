@@ -262,7 +262,7 @@ def makeAk4JetsPlots (sel,j1,j2,j3,j4,channel,suffix,nJet,nbJet,is_MC=False):
         j4_name = "fourthAk4"
     else:
         j1_name = "leadAk4B"
-        j2_name = "leadAk4"if nbJet == 1 else "subLeadAk4B"
+        j2_name = "leadAk4" if nbJet == 1 else "subLeadAk4B"
         j3_name = "subLeadAk4" if nbJet == 1 else "leadAk4"
         j4_name = "thirdAk4" if nbJet == 1 else "subLeadAk4"
 
@@ -738,21 +738,21 @@ def makeHighLevelPlotsResolved(sel,met,lep,j1,j2,j3,j4,channel,suffix,nJet,nbJet
                              xTitle="|#Delta \phi (lep,MET)|",
                              plotopts = channelLabel))
     # lepton_Jet DeltaR plots #
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j1_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j1_name),
                              op.deltaR(lep.p4,j1.p4),
                              sel,
                              EquidistantBinning(50,0.,5.),
                              title="DeltaR_%s_%s (channel %s)"%(channel,j1_name,channel),
                              xTitle="DeltaR [%s_%s]"%(channel,j1_name),
                              plotopts = channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j2_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j2_name),
                              op.deltaR(lep.p4,j2.p4),
                              sel,
                              EquidistantBinning(50,0.,5.),
                              title="DeltaR_%s_%s (channel %s)"%(channel,j2_name,channel),
                              xTitle="DeltaR [%s_%s]"%(channel,j2_name),
                              plotopts = channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j3_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j3_name),
                              op.deltaR(lep.p4,j3.p4),
                              sel,
                              EquidistantBinning(50,0.,5.),
@@ -760,28 +760,28 @@ def makeHighLevelPlotsResolved(sel,met,lep,j1,j2,j3,j4,channel,suffix,nJet,nbJet
                              xTitle="DeltaR [%s_%s]"%(channel,j3_name),
                              plotopts = channelLabel))
     # lepton_Jet DeltaPhi plots #
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j1_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j1_name),
                              op.abs(op.deltaPhi(lep.p4,j1.p4)),
                              sel,
                              EquidistantBinning(20,0.,3.2),
                              title="DeltaPhi_%s_%s (channel %s)"%(channel,j1_name,channel),
                              xTitle="DeltaPhi [%s_%s]"%(channel,j1_name),
                              plotopts=channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j2_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j2_name),
                              op.abs(op.deltaPhi(lep.p4,j2.p4)),
                              sel,
                              EquidistantBinning(20,0.,3.2),
                              title="DeltaPhi_%s_%s (channel %s)"%(channel,j2_name,channel),
                              xTitle="DeltaPhi [%s_%s]"%(channel,j2_name),
                              plotopts=channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j3_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j3_name),
                              op.abs(op.deltaPhi(lep.p4,j3.p4)),
                              sel,
                              EquidistantBinning(20,0.,3.2),
                              title="DeltaPhi_%s_%s (channel %s)"%(channel,j3_name,channel),
                              xTitle="DeltaPhi [%s_%s]"%(channel,j3_name),
                              plotopts=channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_MT_%s_%s"%(channel,suffix,channel,j3_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_MT_lep_%s"%(channel,suffix,j3_name),
                              MT_W1W2_lj(lep,j3,met),
                              sel,
                              EquidistantBinning(50,0.,1000.),
@@ -804,14 +804,14 @@ def makeHighLevelPlotsResolved(sel,met,lep,j1,j2,j3,j4,channel,suffix,nJet,nbJet
                              xTitle="H_{T2}_Ratio [GeV]",
                              plotopts = channelLabel))
     if nJet == 4:
-        plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j4_name),
+        plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j4_name),
                                  op.deltaR(lep.p4,j4.p4),
                                  sel,
                                  EquidistantBinning(50,0.,5.),
                                  title="DeltaR_%s_%s (channel %s)"%(channel,j4_name,channel),
                                  xTitle="DeltaR [%s_%s]"%(channel,j4_name),
                                  plotopts=channelLabel))
-        plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j4_name),
+        plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j4_name),
                                  op.abs(op.deltaPhi(lep.p4,j4.p4)),
                                  sel,
                                  EquidistantBinning(20,0.,3.2),
@@ -834,7 +834,7 @@ def makeHighLevelPlotsResolved(sel,met,lep,j1,j2,j3,j4,channel,suffix,nJet,nbJet
                                  plotopts = channelLabel))
         # Transverse mass plots #
         if nbJet == 2:
-            plots.append(Plot.make1D("%s_%s_highlevelvariable_MT_%s_%s_%s"%(channel,suffix,channel,j3_name,j4_name),
+            plots.append(Plot.make1D("%s_%s_highlevelvariable_MT_lep_%s_%s"%(channel,suffix,j3_name,j4_name),
                                      MT_W1W2_ljj(lep,j3,j4,met),
                                      sel,
                                      EquidistantBinning(50,0.,1000.),
@@ -859,14 +859,14 @@ def makeHighLevelPlotsBoosted(sel,met,lep,j1,j2,channel,suffix,bothAreFat=False)
     channelLabel = channelTitleLabel(channel)
 
     # lepton_Jet DeltaR plots #
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j1_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j1_name),
                              op.deltaR(lep.p4,j1.p4),
                              sel,
                              EquidistantBinning(50,0.,5.),
                              title="DeltaR_(%s_%s)"%(channel, j1_name),
                              xTitle="DeltaR [%s_%s]"%(channel, j1_name),
                              plotopts=channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_%s_%s"%(channel,suffix,channel,j2_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaR_lep_%s"%(channel,suffix,j2_name),
                              op.deltaR(lep.p4,j2.p4),
                              sel,
                              EquidistantBinning(50,0.,5.),
@@ -875,14 +875,14 @@ def makeHighLevelPlotsBoosted(sel,met,lep,j1,j2,channel,suffix,bothAreFat=False)
                              plotopts=channelLabel))
 
     # lepton_Jet DeltaPhi plots #
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j1_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j1_name),
                              op.abs(op.deltaPhi(lep.p4,j1.p4)),
                              sel,
                              EquidistantBinning(20,0.,3.2),
                              title="DeltaPhi_(%s_%s)"%(channel, j1_name),
                              xTitle="DeltaPhi [%s_%s]"%(channel, j1_name),
                              plotopts=channelLabel))
-    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_%s_%s"%(channel,suffix,channel,j2_name),
+    plots.append(Plot.make1D("%s_%s_highlevelvariable_DeltaPhi_lep_%s"%(channel,suffix,j2_name),
                              op.abs(op.deltaPhi(lep.p4,j2.p4)),
                              sel,
                              EquidistantBinning(20,0.,3.2),
