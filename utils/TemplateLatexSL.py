@@ -53,18 +53,18 @@ class TemplateLatex:
                         ("_Ak4BJets_N" , "No of b-tagged Ak4 jet"),
                         ("_Ak4LightJets_N" , "No of all Ak4 jets"),
                         # Dijet Correlation#
+                        ("_DeltaPhi_leadAk4B_subLeadAk4B" , "$\Delta\phi$ of lead and sublead b-jet"),
                         ("_DeltaPhi_leadAk4B_leadAk4" , "$\Delta\phi$ of lead b-jet and lead Ak4 jet"),
                         ("_DeltaPhi_leadAk4B_subLeadAk4" , "$\Delta\phi$ of lead b-jet and sublead Ak4 jet"),
-                        ("_DeltaPhi_leadAk4B_subLeadAk4B" , "$\Delta\phi$ of lead b-jet and sublead b-jet"),
                         ("_DeltaPhi_subLeadAk4B_leadAk4" , "$\Delta\phi$ of sublead b-jet and lead Ak4 jet"),
                         ("_DeltaPhi_leadAk4_subLeadAk4" , "$\Delta\phi$ of lead and sublead Ak4 jet"),
+                        ("_DeltaR_leadAk4B_subLeadAk4B" , "$\Delta$R of lead and sublead b-jet"),
                         ("_DeltaR_leadAk4B_leadAk4" , "$\Delta$R of lead b-jet and lead Ak4 jet"),
                         ("_DeltaR_leadAk4B_subLeadAk4" , "$\Delta$R of lead b-jet and sublead Ak4 jet"),
-                        ("_DeltaR_leadAk4B_subLeadAk4B" , "$\Delta$R of lead b-jet and sublead b-jet"),
                         ("_DeltaR_subLeadAk4B_leadAk4" , "$\Delta$R of sublead b-jet and lead Ak4 jet"),
                         ("_DeltaR_leadAk4_subLeadAk4" , "$\Delta$R of lead and sublead Ak4 jet"),
+                        ("_DiJetPT_leadAk4B_subLeadAk4B" , "Dijet $P_T$ of lead and sublead b-jet"),
                         ("_DiJetPT_leadAk4B_leadAk4" , "Dijet $P_T$ of lead b-jet and lead Ak4 jet"),
-                        ("_DiJetPT_leadAk4B_subLeadAk4B" , "Dijet $P_T$ of lead and sublead b-jet jet"),
                         ("_DiJetPT_leadAk4_subLeadAk4" , "Dijet $P_T$ of lead and sublead Ak4 jet"),
                         ("_InvariantMass_leadAk4B_leadAk4" , "Invariant mass of lead b-jet and lead Ak4 jet"),
                         ("_InvariantMass_leadAk4B_subLeadAk4B" , "Invariant mass of lead and sublead b-jet"),
@@ -81,14 +81,16 @@ class TemplateLatex:
                         ("_DijetPT_Ak8bJet_Ak4Jet" , "Dijet $P_T$ of Ak8 and Ak4 jet"),
                         ("_DeltaR_Ak8bJet_Ak4Jet" , "$\Delta$R between Ak8 and Ak4 jet"),
                         # Highlevel variables 
-                        ("_highlevelvariable_DeltaPhi_El_leadAk4B" , "$\Delta\phi$ of lepton and lead Ak4 b-jet"),
-                        ("_highlevelvariable_DeltaPhi_El_leadAk4" , "$\Delta\phi$ of lepton and lead Ak4 jet"),
-                        ("_highlevelvariable_DeltaPhi_El_subLeadAk4" , "$\Delta\phi$ of lepton and sublead Ak4 jet"),
-                        ("_highlevelvariable_DeltaPhi_El_subLeadAk4B" , "$\Delta\phi$ of lepton and sublead Ak4 b-jet"),
-                        ("_highlevelvariable_DeltaR_El_leadAk4B" , "$\Delta$R of lepton and lead Ak4 b-jet"),
-                        ("_highlevelvariable_DeltaR_El_leadAk4" , "$\Delta$R of lepton and lead Ak4 jet"),
-                        ("_highlevelvariable_DeltaR_El_subLeadAk4" , "$\Delta$R of lepton and sublead Ak4 jet"),
-                        ("_highlevelvariable_DeltaR_El_subLeadAk4B" , "$\Delta$R of lepton and sublead Ak4 b-jet"),
+                        ("_highlevelvariable_DeltaPhi_lep_leadAk4B" , "$\Delta\phi$ of lepton and lead Ak4 b-jet"),
+                        ("_highlevelvariable_DeltaPhi_lep_leadAk4" , "$\Delta\phi$ of lepton and lead Ak4 jet"),
+                        ("_highlevelvariable_DeltaPhi_lep_subLeadAk4" , "$\Delta\phi$ of lepton and sublead Ak4 jet"),
+                        ("_highlevelvariable_DeltaPhi_lep_subLeadAk4B" , "$\Delta\phi$ of lepton and sublead Ak4 b-jet"),
+                        ("_highlevelvariable_DeltaR_lep_leadAk4B" , "$\Delta$R of lepton and lead Ak4 b-jet"),
+                        ("_highlevelvariable_DeltaR_lep_leadAk4" , "$\Delta$R of lepton and lead Ak4 jet"),
+                        ("_highlevelvariable_DeltaR_lep_subLeadAk4" , "$\Delta$R of lepton and sublead Ak4 jet"),
+                        ("_highlevelvariable_DeltaR_lep_subLeadAk4B" , "$\Delta$R of lepton and sublead Ak4 b-jet"),
+                        ("_highlevelvariable_HT2_l3jmet", "$H_{T2}$ (scalar sum of the magnitudes of the HH decay momentas)"),
+                        ("_highlevelvariable_HT2R_l3jmet", "$H_{T2}^R$ (ratio of $H_{T2}$ and scalar sum of the transverse momenta HH decay products"),
 
                      #   ("_ElectronFatjet_DeltaR" , "\Delta R(Electron, Fatjet)"),
                      #   ("_ElectronJet_DeltaR" , "\Delta R(Electron, Jet)"),
@@ -163,7 +165,7 @@ class TemplateLatex:
                 for i,(chan,chan_name) in enumerate(self.channels.items()):
                     frame += "\n\t\t"
                     try:
-                        frame += "\includegraphics[width=0.45\linewidth]{%s}"%(self.channeldict[chan][sel][var])
+                        frame += "\includegraphics[width=0.49\linewidth]{%s}"%(self.channeldict[chan][sel][var])
                         if i == 1:
                             frame += r"\\" # Back to line after two first plots
                         valid_plot = True

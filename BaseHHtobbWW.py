@@ -464,7 +464,7 @@ One lepton and and one jet argument must be specified in addition to the require
                                   cachedir              = cachJEC_dir)
                     configureType1MET(variProxy         = getattr(tree, f"_{metName}"),
                                       jec               = jecTag,
-                                      mayWriteCache     = isNotWorke,
+                                      mayWriteCache     = isNotWorker,
                                       isMC              = self.is_MC,
                                       backend           = be, 
                                       uName             = sample,
@@ -539,7 +539,7 @@ One lepton and and one jet argument must be specified in addition to the require
                                   cachedir              = cachJEC_dir)
                     configureType1MET(variProxy         = getattr(tree, f"_{metName}"),
                                       jec               = jecTag,
-                                      mayWriteCache     = isNotWorke,
+                                      mayWriteCache     = isNotWorker,
                                       isMC              = self.is_MC,
                                       backend           = be, 
                                       uName             = sample,
@@ -1256,6 +1256,7 @@ One lepton and and one jet argument must be specified in addition to the require
             self.btagSF = op.rng_product(self.ak4Jets , lambda j : self.DeepJetDiscReshapingSF(j))
             if self.args.BtagReweightingOn and self.args.BtagReweightingOff:
                 raise RuntimeError("Reweighting cannot be both on and off") 
+            '''
             if self.args.BtagReweightingOn: # Do not apply the ratio
                 noSel = noSel.refine("BtagSF" , weight = self.btagSF)
             elif self.args.BtagReweightingOff:
@@ -1271,7 +1272,8 @@ One lepton and and one jet argument must be specified in addition to the require
                                                                 systName = 'btag_ratio',
                                                                 nameHint = f"bamboo_nJetsWeight{sample}".replace('-','_'))
                 noSel = noSel.refine("BtagSF" , weight = [self.btagSF,self.BtagRatioWeight])
-                #noSel = noSel.refine("BtagSF" , weight = self.btagSF)
+            '''
+            noSel = noSel.refine("BtagSF" , weight = self.btagSF)
 
         # Return #
         return noSel
