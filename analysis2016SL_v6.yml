@@ -896,9 +896,19 @@ samples:
     type: signal
 
 ######################## SM ##############################
-
-
-
+  GluGluToRadionToHHTo2B2WToLNu2J_node_SM:
+    db: das:/GluGluToRadionToHHTo2B2WToLNu2J_node_SM_13TeV-madgraph/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
+    files: dascache/GluGluToRadionToHHTo2B2WToLNu2J_node_SM_2016.dat
+    generated-events: 'genEventSumw_'
+    cross-section: 1.0
+    era: '2016'
+    pufile: 'GluGluToRadionToHHTo2B2WToLNu2J_node_SM_2016.json'
+    split: 5
+    line-color: "#FF4500"
+    line-type: 1
+    legend: HH (Radion 2B2W, node SM)
+    order: 16
+    type: signal
 
 ##########################################################
 
@@ -933,39 +943,39 @@ plotIt:
     ttbar:
       fill-color: "#cc7a16"
       legend: tt
-      order: 1
+      order: 5
     ST:
       fill-color: "#99053d"
       legend: Single Top
-      order: 2
+      order: 6
     DY:
       fill-color: "#1a83a1"
       legend: Drell-Yan
-      order: 3
+      order: 7
     Wjets:
       fill-color: "#d95564"
       legend: W+jets
-      order: 4
+      order: 8
     VVV: 
       fill-color: "#ccbf45"
       legend: VV(V)
-      order: 5
+      order: 2
     ttVV:
       fill-color: "#174704"
       legend: tt+V(V)
-      order: 6
+      order: 4
     SM:
       fill-color: "#06b894"
       legend: SM Higgs (ggH, qqH, ttH, ZH)
-      order: 7
+      order: 3
     Rares:
       fill-color: "#610596"
       legend: Rares
-      order: 8
-    DYEstimation:
-      fill-color: "#1a83a1"
-      legend: Drell-Yan (from data)
-      order: 3
+      order: 1
+    #DYEstimation:
+    #  fill-color: "#1a83a1"
+    #  legend: Drell-Yan (from data)
+    #  order: 3
     Fake:
       fill-color: "#6e3303"
       legend: Fake

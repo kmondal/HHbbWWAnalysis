@@ -454,6 +454,27 @@ def makeInclusiveBoostedSelection(self,selObject,copy_sel=False,plot_yield=False
         return selObject
 
 
+
+def applyBDTforWhadTagger(self, lepton, jets, bjets, lightJets, model_even, model_odd, event):
+    
+    inVars = [ lightJets[0].p4.Pt(),
+               lightJets[0].btagCSVV2,
+               lightJets[0].qgl,
+               lightJets[1].p4.Pt(),
+               lightJets[1].qgl,
+               op.deltaR((lightJets[0].p4+lightJets[1].p4),lepton.p4),
+               op.deltaR(lightJets[0].p4, lightJets[1].p4),
+               op.invariant_mass(lightJets[0].p4, lightJets[1].p4),
+               op.rng_len(bjets),
+               op.rng_len(jets)
+           ]
+
+    output = op.switch(event%2,model_odd(*inVars),model_even(*inVars))
+    return output[0]
+
+################################################################################################################
+#                                                       DL                                                     #                       
+################################################################################################################
 def makeDoubleLeptonSelection(self,baseSel,plot_yield=False,use_dd=True): 
     """
     Produces the requested lepton selection (encapsulated in SelectionObject class objects)

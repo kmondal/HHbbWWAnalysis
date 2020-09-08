@@ -241,7 +241,7 @@ One lepton and and one jet argument must be specified in addition to the require
         parser.add_argument("--WhadTagger", 
                             action      = "store",
                             type        = str,
-                            help        = "BDT | simple")
+                            help        = "Whad tagger :: Simple || BDT")
 
 
     def prepareTree(self, tree, sample=None, sampleCfg=None):
@@ -1046,8 +1046,8 @@ One lepton and and one jet argument must be specified in addition to the require
 
         # Doesn't contain the leading bTag scored Light Jet
         self.remainingJets = op.select(self.ak4LightJetsByPt, lambda jet : jet.idx != self.ak4LightJetsByBtagScore[0].idx)
-        # Wjj selection for resolved2b2j
-
+        self.remainingJetPairs = lambda jets : op.combine(jets, N=2) 
+        
         #############################################################################
         #                                AK8 Jets                                   #
         #############################################################################
